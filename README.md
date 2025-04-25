@@ -1,4 +1,4 @@
-# Supplementary code for "The impact of medical cannabis laws on cannabis and opioid use disorder treatment and overdose-related healthcare utilization among adults with chronic non-cancer pain" 
+# Supplementary code for "The impact of medical cannabis laws on cannabis and opioid use disorder treatment and overdose-related healthcare utilization among adults with chronic non-cancer pain"(McGinty, et al. 2022) 
 _Emma E. McGinty, Christie Lee Luo, Nicholas J. Seewald, Elizabeth A. Stuart, Kayla N. Tormohlen, Pradhyumna Wagle_
 
 This repository stores code for the study: The impact of medical cannabis laws on cannabis and opioid use disorder treatment and overdose-related healthcare utilization among adults with chronic non-cancer pain. 
