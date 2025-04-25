@@ -26,7 +26,7 @@ library(webshot2)
 library(ggplotify)
 
 ## Declare and create(if/as needed) input and output paths for datasets
-base.path <- "C:/Users/prw4002/Weill Cornell Medicine/Kayla Tormohlen - State Medical Cannabis Laws- VRDC/State Medical Cannabis Laws-Working Files/"
+base.path <- "" # Declare base path here!!!
 in.path   <- paste0(base.path, "/12m CE_SOURCE_COPY") # Input files path
 oinp.path <- paste0(base.path, "/other_inputs") # Other inputs path
 outc.path <- paste0(base.path, "/outcome_workbooks") # Outcome workbooks path
