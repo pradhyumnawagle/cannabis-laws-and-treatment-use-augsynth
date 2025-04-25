@@ -8,7 +8,6 @@ Included are R scripts for data cleaning, running the Augmented Synthetic Contro
 Primary caller file where all variables, parameters and libraries are defined. 
 This program calls all other program in order(top-down).
 Run all parts from top-bottom to run the entire program.
--------------------------------------------------------------------------------------------------
 
 
 [stratify_state_cohorts.R](stratify_state_cohorts.R)
@@ -28,7 +27,7 @@ This utility program runs augsynth, saves results and plots ATT figures over tim
 
 [xaugsynth.r](xaugsynth.r)
 
-This program is a utility program which generates average ATT values from augsynth results, and creates differences plot. This code is derived from [this] (https://github.com/nickseewald/opioid-prescribing-augsynth/blob/main/xaugsynth.R) original code.
+This program is a utility program which generates average ATT values from augsynth results, and creates differences plot. This code is derived from [this](https://github.com/nickseewald/opioid-prescribing-augsynth/blob/main/xaugsynth.R) original code.
 
 
 [aggregate_results.R](aggregate_results.R)
