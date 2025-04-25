@@ -10,15 +10,15 @@ Run all parts from top-bottom to run the entire program.
 
 
 - [stratify_state_cohorts.R](stratify_state_cohorts.R): 
-This is the first program called. This program organizes all cohort data files based on the study_type variable. The study_type variable combines the specific type of study with the name of each treatment state. Each cohort file contains a total of 9,072 records, with 1,296 entries for each of the 7 study types. Within each study type, there are 72 records for each of the 17 control states, as well as 72 records for the corresponding treatment state. These 72 records represent each month in the study period. For example, for the study type overall_FL, there will be 72 records for each of the 17 comparison states and 72 for Florida itself, totaling 1,296 records. This same structure applies to all treatment states.
+This is the first program called by the main caller. This program organizes all cohort data files based on the study_type variable. The study_type variable combines the specific type of study with the name of each treatment state. Each cohort file contains a total of 9,072 records, with 1,296 entries for each of the 7 study types. Within each study type, there are 72 records for each of the 17 control states, as well as 72 records for the corresponding treatment state. These 72 records represent each month in the study period. For example, for the study type overall_FL, there will be 72 records for each of the 17 comparison states and 72 for Florida itself, totaling 1,296 records. This same structure applies to all treatment states.
 
 
 - [cohort_augsynth.R](cohort_augsynth.R):
-This program runs augsynth for all stratified cohort state files. This program calls run_and_plot to run augsynth and plot the augsynth results.  
+This program runs augmented synthentic control for all stratified cohort state files. It reads the data, replaces all small cell supressed values based on the passed paramater and calls run_and_plot to run augsynth and plot the augsynth results.  
 
 
 - [run_and_plot.R](run_and_plot.R):
-This utility program runs augsynth, saves results and plots ATT figures over time.
+This utility program runs runs augmented synthentic control, saves results(ATT, weights) and plots ATT values over time for each run.
 
 
 - [xaugsynth.r](xaugsynth.r):
