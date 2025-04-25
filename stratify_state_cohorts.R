@@ -87,7 +87,9 @@ stratify_state_cohorts <- function(){
       write_xpt(strat_data[[name]], path = paste0(out.path, "/", cohort.name, "/", state.name, "/", name, ".xpt"))
       #save(strat_data[[name]], file = paste0(out.path, "/", cohort.name, "/", state.name, "/", name, ".xpt"))
       cat("File saved: ",name , " with ", nrow(strat_data[[name]]),  "observations. \n")
-    #   
+      
+    #   Optional: Code below creates variable summary with value distribution and pre-period trends of outcomes
+    #   This part is run before running augsynth model to get familiar with the trends, however it is optional
     #   ##########################################################################
     #   # Add cohort specific state in the dataset and add if each row is for treatment state or comparison pool
     #   strat_data[[name]]$cohort_state <- state.name
