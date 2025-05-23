@@ -19,7 +19,7 @@ run_augsynth_for_cohorts <- function(){
     # Run the loop for each outcome variable
     for (oc in outcome.vars){
       # Create a folder to store results and figures for each outcome
-      out.path  <- paste0(base.path, "state_cohorts/", cohort.name, "/", state.name,"/", oc)
+      out.path  <- paste0(base.path, "/state_cohorts/", cohort.name, "/", state.name,"/", oc)
       dir.create(out.path)
       # Delete all files in the folder
       unlink(file.path(out.path, "*"), recursive = FALSE, force = TRUE)
