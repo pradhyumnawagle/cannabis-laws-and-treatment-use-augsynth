@@ -493,7 +493,9 @@ get_table1 <- function(){
     "OUD_initiation_proportion"="% of patients newly initiating OUD treatment", 
     "OUD_med_proportion"="% of patients with any medication for OUD (MOUD)",
     "ovd_overall_cannabis_proportion"="% of patients with any CUD overdose utilization", 
-    "ovd_overall_opioid_proportion"="% of patients with any OUD overdose utilization"
+    "ovd_overall_opioid_proportion"="% of patients with any OUD overdose utilization",
+    "ot_cr_CUD_proportion" = "% of patients with any carrier + outpatient CUD treatment",
+    "ot_cr_OUD_proportion" = "% of patients with any carrier + outpatient OUD treatment"
   )
   # Add description for all variables
   x$Var <- table1.desc[x$variable]
@@ -855,7 +857,9 @@ get_time_series_graphs <- function(){
                         "OUD_initiation"="OUD treatment Initiation", 
                         "OUD_med"="Any medication for OUD (MOUD)",
                         "ovd_overall_cannabis"="CUD overdose", 
-                        "ovd_overall_opioid"="OUD overdose")
+                        "ovd_overall_opioid"="OUD overdose",
+                        "ot_cr_CUD" = "Any outpatient CUD treatment",
+                        "ot_cr_OUD" = "Any outpatient OUD treatment")
   
   # Loop across outcomes and generate and save the figure 
   for (outcome in outcomes){
