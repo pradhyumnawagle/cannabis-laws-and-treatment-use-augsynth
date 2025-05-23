@@ -88,7 +88,7 @@ save_results_to_workbook <- function(){
       wks.row <- 3
       # Write tables for each state
       for (state in state.list){
-        in.path  <- paste0(base.path, "state_cohorts/", cohort, "/", state,"/", outcome)
+        in.path  <- paste0(base.path, "/state_cohorts/", cohort, "/", state,"/", outcome)
         
         # Write the tables to the worksheet
         tab.path.adj <- paste0(in.path, "/augsynth_summ_adj.csv")
