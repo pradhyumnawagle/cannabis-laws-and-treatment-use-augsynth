@@ -1,4 +1,3 @@
-
 ## This function will stratify sate cohorts by study type
 stratify_state_cohorts <- function(){
   
@@ -8,6 +7,7 @@ stratify_state_cohorts <- function(){
   
   # Initialize an empty list to store summaries
   summary_list <- list()
+  
   # Function to Create directory if not present
   create_dir <- function(path, folder){
     # Create a file path if not already there
@@ -183,12 +183,4 @@ stratify_state_cohorts <- function(){
   # Inform the user
   cat("Excel file saved as:", output_file, "\n")
 }
-
-  
-
-
- 
-
-
-
 
