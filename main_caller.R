@@ -49,8 +49,9 @@ state.list <- as.list(c( "FL", "MD", "MN", "NH", "NY", "OK", "PA"))
 cohort.list <- c("outcome")
 ## List outcomes to evaluate
 outcome.vars <- c("in_CUD", "ot_CUD", "CUD_initiation",
-                  "in_OUD", "ot_OUD", "OUD_initiation", "OUD_med",
-                  "ovd_overall_cannabis", "ovd_overall_opioid" )
+                   "in_OUD", "ot_OUD", "OUD_initiation", "OUD_med",
+                   "ot_cr_CUD", "ot_cr_OUD",
+                   "ovd_overall_cannabis", "ovd_overall_opioid" )
 ## List all additional parameters needed to control the augsynth run
 small.cell.rep = 5 # Replace small cell suppression by 5
 ################################################################################
@@ -80,7 +81,9 @@ outcome.desc <- c("in_CUD"="% of patients with any inpatient CUD treatment",
                    "OUD_initiation"="% of patients newly initiating OUD treatment", 
                    "OUD_med"="% of patients with any medication for OUD (MOUD)",
                    "ovd_overall_cannabis"="% of patients with any CUD overdose utilization", 
-                   "ovd_overall_opioid"="% of patients with any OUD overdose utilization")
+                   "ovd_overall_opioid"="% of patients with any OUD overdose utilization",
+                   "ot_cr_CUD" = "% of patients with any carrier + outpatient CUD treatment",
+                   "ot_cr_OUD" = "% of patients with any carrier + outpatient OUD treatment")
 
 ###################################################################
 ## Run - stratify all cohorts 
