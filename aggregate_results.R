@@ -32,16 +32,16 @@ get_augsynth_avg_results <- function(){
       # Create a unique analysis name for each cohort, outcome and state
       analysis_name <- paste(cohort.name, outcome, tx_state, sep = "_")
       # Read augsynth results from the state-outcome working folder
-      augsynth_results[[analysis_name]] <<- readRDS(paste0(base.path, "state_cohorts/", cohort.name, "/", tx_state,"/", outcome.name, "/augsynth_results_adj.xpt"))
+      augsynth_results[[analysis_name]] <<- readRDS(paste0(base.path, "/state_cohorts/", cohort.name, "/", tx_state,"/", outcome.name, "/augsynth_results_adj.xpt"))
       # Read the file with weights assigned from the augsynth run
-      wt.file <- paste0(base.path, "state_cohorts/", cohort.name, "/", tx_state,"/", outcome.name, "/augsynth_weights_adj.csv")
+      wt.file <- paste0(base.path, "/state_cohorts/", cohort.name, "/", tx_state,"/", outcome.name, "/augsynth_weights_adj.csv")
       # Read weights from input weights file
       weights <- read.csv(wt.file)
       weights <- weights[, -1]
       colnames(weights)[colnames(weights) == "STATE_CODE"] <- "state"
       
       # Read the clean dataset used to run augsynth for each model
-      data.file <- paste0(base.path, "state_cohorts/", cohort.name, "/", tx_state,"/", outcome.name, "/", cohort.name, "_", tx_state, "_clean.xpt")
+      data.file <- paste0(base.path, "/state_cohorts/", cohort.name, "/", tx_state,"/", outcome.name, "/", cohort.name, "_", tx_state, "_clean.xpt")
       # Read the file and calculate the standard deviation for covariates
       d <- read_xpt(data.file)
       d.sd <- d %>%
@@ -352,7 +352,7 @@ get_pre_post_augsynth_results <- function(){
   
   
   # Write the overall ATT pre/post values as a csv table
-  write.csv(out, paste0(base.path, "final_exhibits/overall_ATT.csv"), row.names=FALSE)
+  write.csv(out, paste0(base.path, "/final_exhibits/overall_ATT.csv"), row.names=FALSE)
   assign("overall_ATT", out, envir = .GlobalEnv)
 }
 #############################################################################
@@ -564,7 +564,7 @@ get_appx_exhibits <- function(){
   # Table for Appendix B
   for (outcome in outcomes) {
     
-    fin.out.path <- paste0(base.path, "final_exhibits/", outcome)
+    fin.out.path <- paste0(base.path, "/final_exhibits/", outcome)
     dir.create(fin.out.path)
     # Delete all files in the folder
     unlink(file.path(fin.out.path, "*"), recursive = FALSE, force = TRUE)
@@ -860,7 +860,7 @@ get_time_series_graphs <- function(){
   # Loop across outcomes and generate and save the figure 
   for (outcome in outcomes){
     # Define path for each outcome
-    fin.out.path <- paste0(base.path, "final_exhibits/", outcome)
+    fin.out.path <- paste0(base.path, "/final_exhibits/", outcome)
     # Create a plot 
     png(paste0(fin.out.path,"/time_Series_plot.png"), width = 3.4, height = 3.4, units = "in", res = 300)
     # Get the figure and add to the plot
