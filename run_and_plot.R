@@ -3,11 +3,6 @@ run_augsynth <- function(dataset, eqn, adjustment, state.name, cohort, outcome, 
   
 
   #################Run Augsynth #######################################  
-  ## Install "remotes" package to download augsynth from GitHub
-  if (!("remotes" %in% installed.packages()))
-    install.packages('remotes')
-  ## Load augsynth
-  library(augsynth)
   source("xaugsynth.r")
   
   # Run augmented synthetic model
