@@ -25,12 +25,22 @@ library(gt)
 library(webshot2)
 library(ggplotify)
 
+## Install augsynth through remotes package
+## Install "remotes" package to download augsynth from GitHub
+if (!("remotes" %in% installed.packages()))
+  install.packages('remotes')
+## Load augsynth
+library(augsynth)
+
 ## Declare and create(if/as needed) input and output paths for datasets
 base.path <- "" # Declare base path here!!!
 in.path   <- paste0(base.path, "/12m CE_SOURCE_COPY") # Input files path
 oinp.path <- paste0(base.path, "/other_inputs") # Other inputs path
 outc.path <- paste0(base.path, "/outcome_workbooks") # Outcome workbooks path
 log.path  <- paste0(base.path, "/logs") # Log path
+
+# Set current directory with all code files as the working directory
+setwd("Enter the path here!!!")
 
 ##################### Parameters ###############################################
 ## List states to run
