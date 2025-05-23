@@ -777,26 +777,7 @@ get_time_series_graphs <- function(){
     overallTxMeans[[outcome]][["TIME_SINCE_TX"]] <- overallTxMeans[[outcome]][["TIME_SINCE_TX"]] + 36
     # Calculate y-axis limits conditionally based on outcome type
     max_y <- max(overallTxMeans[[outcome]][, outcome], na.rm = TRUE)
-    ylim_upper <-
-      if (grepl("ovd_overall_cannabis", outcome)) {
-        max_y + 0.016
-      } else if (grepl("med", outcome)) {
-        max_y + 8.5
-      }else if (grepl("in_CUD", outcome)) {
-        max_y + 0.014
-      }else if (grepl("ot_CUD", outcome)) {
-        max_y + 0.15
-      }else if (grepl("CUD_initiation", outcome)) {
-        max_y + 0.02
-      }else if (grepl("CUD", outcome)) {
-        max_y + 0.03
-      }else if (grepl("in_OUD", outcome)) {
-        max_y + 0.25
-      }else if (grepl("OUD_initiation", outcome)) {
-        max_y + 1.3
-      }else {
-        max_y + 0.6 # Default padding
-      }
+    ylim_upper <- 10 * max_y # Set upper limit to 10 times the max y value
     ylim_lower <- 0 # Always start y-axis at 0
     
     # Configure plot layout
