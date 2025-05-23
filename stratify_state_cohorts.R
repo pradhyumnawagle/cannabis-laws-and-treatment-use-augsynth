@@ -36,41 +36,57 @@ stratify_state_cohorts <- function(){
     # Keep the columns in the table or columns to generate proportion
     vars.to.eval <- c(demo.vars, outcome.vars)
     curr.vars <- intersect(vars.to.eval, names(data))
-    # Replace small cell suppressed values in each of those columns as NA and generate proportion out of total benes
-    data <- data %>%
-      mutate(across(all_of(curr.vars), ~ ifelse(. == 99999, NA, .))) %>%
-      mutate(across(all_of(curr.vars), ~ (. / enrolled_bene)*100, .names = "{.col}_proportion")) %>%
-      mutate(mean_age = (age_at_end_1+age_at_end_2+age_at_end_3+age_at_end_4
-                         +age_at_end_5+age_at_end_6)/enrolled_bene)
     
-    ###Output a summary table with counts of total benes, outcomes and small cell suppression
-    data2 <- read_sas(x)
-    outc.summ <- data2 %>%
+    ## Output a summary table with counts of total benes, outcomes and small cell suppression
+    ## Done here so that we capture small cell suppressed values before replacing
+    outc.summ <- data %>%
       filter(state %in% state.list) %>%
-      mutate(across(all_of(outcome.vars), ~ ifelse(. == 99999, 1, .))) %>%
+      mutate(
+        ot_cr_CUD = ot_CUD + cr_CUD,
+        ot_cr_OUD = ot_OUD + cr_OUD,
+        across(all_of(outcome.vars), ~ ifelse(. == 99999, 1, .))) %>%
       group_by(state) %>%
       summarise(
         mean_bene_count = mean(enrolled_bene),
         min_bene_count = min(enrolled_bene),
         max_bene_count = max(enrolled_bene),
-        
+
         across(all_of(outcome.vars),
                list(mean= ~mean(., na.rm=TRUE),
-                    scs = ~ sum(. == 1, na.rm = TRUE), 
-                    scs_pct = ~ sum(. == 1, na.rm = TRUE) / 72), 
+                    scs = ~ sum(. == 1, na.rm = TRUE),
+                    scs_pct = ~ sum(. == 1, na.rm = TRUE) / 72),
                .names = "{col}_{fn}"),
       # Add the count of rows where sud_overall == 99999 and sud_init == 0
       sud_diff = sum(SUD_overall == 1 & (SUD_initiation != 0 & SUD_initiation != 1 )),
       cud_diff = sum(CUD_overall == 1 & (CUD_initiation != 0 & CUD_initiation != 1)),
       oud_diff = sum(OUD_overall == 1 & (OUD_initiation != 0 & OUD_initiation != 1)),
-          
+
       cohort = cohort.name,
       .groups = 'drop')
     # Append to summary list
     summary_list[[x]] <- outc.summ
+    
+    # This is where actual data manipulation happens before stratifying
+    # Replace small cell suppressed values in each of those columns as NA and generate proportion out of total benes
+    data <- data %>%
+      mutate(across(all_of(curr.vars), ~ ifelse(. == 99999, small.cell.rep, .))) %>%
+      mutate(across(all_of(curr.vars), ~ (. / enrolled_bene)*100, .names = "{.col}_proportion")) %>%
+      mutate(mean_age = (age_at_end_1+age_at_end_2+age_at_end_3+age_at_end_4
+                         +age_at_end_5+age_at_end_6)/enrolled_bene) %>%
+      # Create a column that has the sum of outpatient plus carrier claims
+      # Calculate the proportion for that variable and perform small cell reps
+      mutate(
+        across(c("cr_CUD", "cr_OUD", "ot_OUD", "ot_CUD"), ~ ifelse(. == 99999, small.cell.rep, .)),
+        ot_cr_CUD = ot_CUD + cr_CUD,
+        ot_cr_OUD = ot_OUD + cr_OUD,
+        
+        ot_cr_CUD_proportion = (ot_cr_CUD/enrolled_bene)*100,
+        ot_cr_OUD_proportion = (ot_cr_OUD/enrolled_bene)*100,
+      )
+    
+    
     # Split the table into tiny tibbles by study type using the split function
     strat_data <- split(data, data$study_type)
-
     # For each state-cohort, loop through and work as needed
     for (name in names(strat_data)) {
 
@@ -82,30 +98,30 @@ stratify_state_cohorts <- function(){
 
       dir <- create_dir(out.path, cohort.name)
       dir <- create_dir(paste(out.path, cohort.name, sep="/"), state.name)
+      ## Delete all files in the folder
+      unlink(file.path(paste0(out.path, "/", cohort.name, "/", state.name), "*"), recursive = FALSE, force = TRUE)
 
       # Write the file into the path
       write_xpt(strat_data[[name]], path = paste0(out.path, "/", cohort.name, "/", state.name, "/", name, ".xpt"))
       #save(strat_data[[name]], file = paste0(out.path, "/", cohort.name, "/", state.name, "/", name, ".xpt"))
       cat("File saved: ",name , " with ", nrow(strat_data[[name]]),  "observations. \n")
-      
-    #   Optional: Code below creates variable summary with value distribution and pre-period trends of outcomes
-    #   This part is run before running augsynth model to get familiar with the trends, however it is optional
-    #   ##########################################################################
-    #   # Add cohort specific state in the dataset and add if each row is for treatment state or comparison pool
-    #   strat_data[[name]]$cohort_state <- state.name
-    #   strat_data[[name]]$treatment_state <- ifelse(strat_data[[name]]$state==strat_data[[name]]$cohort_state,strat_data[[name]]$state,"Comparison Pool")
     #   
-    #   ## Get the variable distribution for each file and output the distribution
-    #   count_zeros <- function(x) {
-    #     sum(x == 0, na.rm = TRUE)
-    #   }
-    #   skim_func <- skim_with(numeric=sfl(hist=NULL, n_total=length, n_zero = ~ count_zeros(.)) )
-    #   var.dist.table <- strat_data[[name]]  %>%
-    #     group_by(treatment_state) %>%
-    #     select(any_of(vars.to.eval), treatment_state)
-    #   var.dist.table <- skim_func(var.dist.table)
-    #   colnames(var.dist.table) <- gsub("^(numeric\\.|skim\\_)", "", colnames(var.dist.table))
-    #   write_csv(var.dist.table, paste0(out.path, "/", cohort.name, "/", state.name, "/", name, "_variable_distribution.csv"))
+    #   ##########################################################################
+    ## Add cohort specific state in the dataset and add if each row is for treatment state or comparison pool
+      strat_data[[name]]$cohort_state <- state.name
+      strat_data[[name]]$treatment_state <- ifelse(strat_data[[name]]$state==strat_data[[name]]$cohort_state,strat_data[[name]]$state,"Comparison Pool")
+
+      ## Get the variable distribution for each file and output the distribution
+      count_zeros <- function(x) {
+        sum(x == 0, na.rm = TRUE)
+      }
+      skim_func <- skim_with(numeric=sfl(hist=NULL, n_total=length, n_zero = ~ count_zeros(.)) )
+      var.dist.table <- strat_data[[name]]  %>%
+        group_by(treatment_state) %>%
+        select(any_of(vars.to.eval), treatment_state)
+      var.dist.table <- skim_func(var.dist.table)
+      colnames(var.dist.table) <- gsub("^(numeric\\.|skim\\_)", "", colnames(var.dist.table))
+      write_csv(var.dist.table, paste0(out.path, "/", cohort.name, "/", state.name, "/", name, "_variable_distribution.csv"))
       ##########################################################################
       
       ## The code below produces pre-period trends graph for overall cohort
@@ -156,18 +172,17 @@ stratify_state_cohorts <- function(){
       #   write_csv(outcomes.summary, paste0(out.path, "/", cohort.name, "/", state.name, "/", name, "_outcomes_summary.csv"))
       #   
        }
-    }
-}
+  }
+  
   
   # # Combine all summaries into one data frame
-  # final_summary <- bind_rows(summary_list)
-  # 
-  # cat("rows:", nrow(final_summary), "\n")
-  # output_file <- paste0(outc.path, "/outcomes_summary2.xlsx")
-  # write.xlsx(final_summary, output_file)
-  # # Inform the user
-  # cat("Excel file saved as:", output_file, "\n")
-
+  final_summary <- bind_rows(summary_list)
+  cat("rows:", nrow(final_summary), "\n")
+  output_file <- paste0(outc.path, "/Outcomes_summary.xlsx")
+  write.xlsx(final_summary, output_file)
+  # Inform the user
+  cat("Excel file saved as:", output_file, "\n")
+}
 
   
 
