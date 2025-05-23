@@ -41,20 +41,7 @@ run_augsynth_for_cohorts <- function(){
         left_join(imp.dates, by = c("cohort_state" = "Treatment_State")) %>%
         mutate(treat_year_month = as.integer(format(Implementation_date_rounded, "%Y%m"))) %>%
         mutate(treatment = ifelse(year_month_num>=treat_year_month & state==cohort_state, 1, 0)) %>%
-        mutate(year_month_num = as.yearmon(as.character(year_month_num), format = "%Y%m"))  %>%
-        # Replace NA in columns containing "proportion" with 5 / enrolled_bene
-        mutate(
-          across(
-            contains("proportion"),
-            # For proportion columns: NA → (small_cell_Rep / enrolled_bene)
-            ~ ifelse(is.na(.x), (small.cell.rep / enrolled_bene)*100, .x)
-          ),
-          across(
-            -contains("proportion"),
-            # For other columns: NA → small_cell_Rep (direct scalar replacement)
-            ~ replace_na(.x, small.cell.rep)
-          )
-        )
+        mutate(year_month_num = as.yearmon(as.character(year_month_num), format = "%Y%m"))
         
       
       # # Write the final file into the output folder for aggregation purpose
